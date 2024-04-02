@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Tue Apr  2 22:35:54 2024
+Quartus Prime Version : 18.1.1 Build 646 04/11/2019 SJ Lite Edition
+Revision Name : VGA_Test
+Top-level Entity Name : neptuno_top
+Family : Cyclone IV E
+Total logic elements : 219
+    Total combinational functions : 219
+    Dedicated logic registers : 71
+Total registers : 71
+Total pins : 24
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 1
