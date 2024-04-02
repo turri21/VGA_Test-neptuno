@@ -4,7 +4,7 @@
 Based on QMTECH's examples.
 
 v1.1
-It circles automatically through the VGA test screens.
+It circles automatically through the various VGA test screens.
 
 v1.0
 If pressing each time the SW1 (user button 0)
