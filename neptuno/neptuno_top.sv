@@ -64,13 +64,15 @@ parameter Vde_end=803;
 
   reg[10 : 0] x_cnt;
   reg[9 : 0]  y_cnt;
-  reg[15 : 0] grid_data_1;
-  reg[15 : 0] grid_data_2;
-  reg[15 : 0] bar_data;
+  reg[17 : 0] grid_data_1;
+  reg[17 : 0] grid_data_2;
+  reg[17 : 0] bar_data;
   reg[3 : 0] vga_dis_mode;
   reg[5 : 0]  vga_r_reg;
+  //reg[4 : 0]  vga_r_reg;
   reg[5 : 0]  vga_g_reg;
   reg[5 : 0]  vga_b_reg;  
+  //reg[4 : 0]  vga_b_reg;
   reg hsync_r;
   reg vsync_r; 
   reg hsync_de;
@@ -135,14 +137,22 @@ end
 always @(negedge vga_clk)   
 begin
         if ((x_cnt[4]==1'b1) ^ (y_cnt[4]==1'b1))            //Produce small grid images
-			 grid_data_1<= 16'h0000;
+			 //grid_data_1<= 16'h0000;
+			 //grid_data_1<= 18'b000000000000000000;
+			 grid_data_1<= 18'h00000;
 	else
-			 grid_data_1<= 16'hffff;
+			 //grid_data_1<= 16'hffff;
+			 //grid_data_1<= 16'b111111111111111111;
+			 grid_data_1<= 18'h3ffff;
 				 
 	if ((x_cnt[6]==1'b1) ^ (y_cnt[6]==1'b1))            //Produce large grid images
-			  grid_data_2<=16'h0000;
+			  //grid_data_2<=16'h0000;
+			  //grid_data_2<= 18'b000000000000000000;
+			  grid_data_2<= 18'h00000;
 	else
-		          grid_data_2<=16'hffff; 
+		          //grid_data_2<=16'hffff; 
+					 //grid_data_2<= 16'b111111111111111111;
+					 grid_data_2<= 18'h3ffff;
 end
 	
 //----------------------------------------------------------------
@@ -151,23 +161,32 @@ end
 always @(negedge vga_clk)   
 begin
        if (x_cnt==Hde_start)            
-			    bar_data<= 16'hf800;              //Red color bar
+			    //bar_data<= 16'hf800;              //Red color bar
+				 bar_data<=18'b111111000000000000;
        else if (x_cnt==Hde_start + bar_interval)
-			    bar_data<= 16'h07e0;              //Green color bar				 
+			    //bar_data<= 16'h07e0;              //Green color bar				 
+				 bar_data<=18'b000000111110000000;
        else if (x_cnt==Hde_start + bar_interval*2)            
-			    bar_data<=16'h001f;               //Blue color bar
+			    //bar_data<=16'h001f;               //Blue color bar
+				 bar_data<=18'b000000000000111111;
        else if (x_cnt==Hde_start + bar_interval*3)         
-			    bar_data<=16'hf81f;               //Purple color bar
+			    //bar_data<=16'hf81f;               //Purple color bar
+				 bar_data<=18'b111111000000111111;
        else if (x_cnt==Hde_start + bar_interval*4)           
-			    bar_data<=16'hffe0;               //Yellow color bar
+			    //bar_data<=16'hffe0;               //Yellow color bar
+				 bar_data<=18'b111111111111000000;
        else if (x_cnt==Hde_start + bar_interval*5)            
-			    bar_data<=16'h07ff;               //Cyan color bar
+			    //bar_data<=16'h07ff;               //Cyan color bar
+				 bar_data<=18'b000000111111111111;
        else if (x_cnt==Hde_start + bar_interval*6)             
-			    bar_data<=16'hffff;               //White color bar
+			    //bar_data<=16'hffff;               //White color bar
+				 bar_data<=18'b111111111111111111;
        else if (x_cnt==Hde_start + bar_interval*7)            
-			    bar_data<=16'hfc00;               //Orange color bar
+			    //bar_data<=16'hfc00;               //Orange color bar
+				 bar_data<=18'b111111100000000000;
        else if (x_cnt==Hde_start + bar_interval*8)              
-			    bar_data<=16'h0000;               //Rest black   
+			    //bar_data<=16'h0000;               //Rest black   
+				 bar_data<=18'b000000000000000000;
 end
 	
 //----------------------------------------------------------------
@@ -182,84 +201,88 @@ if(~rstn) begin
 	  end
           else
           case(vga_dis_mode)
-               4'b0000:begin
-		         vga_r_reg<=0;                        //VGA Display all black
-                         vga_g_reg<=0;
-                         vga_b_reg<=0;
-		       end
-	       4'b0001:begin
-			 vga_r_reg<=5'b11111;                 //VGA Display all white
-                         vga_g_reg<=6'b111111;
-                         vga_b_reg<=5'b11111;
-		       end
+				4'b0000:begin
+					vga_r_reg<=0;                        //VGA Display all black
+               vga_g_reg<=0;
+               vga_b_reg<=0;
+				end
+				4'b0001:begin
+					//vga_r_reg<=5'b11111;                 //VGA Display all white
+					vga_r_reg<=6'b111111;
+					vga_g_reg<=6'b111111;
+					//vga_b_reg<=5'b11111;
+					vga_b_reg<=6'b111111;
+				end
 	       4'b0010:begin
-		         vga_r_reg<=5'b11111;                 //VGA Display all red
-                         vga_g_reg<=0;
-                         vga_b_reg<=0;  
-                       end			  
+					vga_r_reg<=6'b111111;                 //VGA Display all red
+               vga_g_reg<=0;
+               vga_b_reg<=0;  
+            end			  
 	       4'b0011:begin
-			 vga_r_reg<=0;                        //VGA Display all green
-                         vga_g_reg<=6'b111111;
-                         vga_b_reg<=0; 
-                       end					  
-               4'b0100:begin     
-	                 vga_r_reg<=0;                        //VGA Display all blue
-                         vga_g_reg<=0;
-                         vga_b_reg<=5'b11111;
-		       end
-               4'b0101:begin     
-			 vga_r_reg<=grid_data_1[15:11];       // VGA Display square 1
-                         vga_g_reg<=grid_data_1[10:5];
-                         vga_b_reg<=grid_data_1[4:0];
-                       end					  
-               4'b0110:begin     
-		         vga_r_reg<=grid_data_2[15:11];       // VGA Display square 2
-                         vga_g_reg<=grid_data_2[10:5];
-                         vga_b_reg<=grid_data_2[4:0];
-		       end
+					vga_r_reg<=0;                        //VGA Display all green
+               vga_g_reg<=6'b111111;
+               vga_b_reg<=0; 
+            end					  
+          4'b0100:begin     
+	            vga_r_reg<=0;                        //VGA Display all blue
+               vga_g_reg<=0;
+               vga_b_reg<=6'b111111;
+		      end
+          4'b0101:begin     
+					vga_r_reg<=grid_data_1[17:12];       // VGA Display square 1
+               vga_g_reg<=grid_data_1[11:6];
+               vga_b_reg<=grid_data_1[5:0];
+            end					  
+          4'b0110:begin     
+		         vga_r_reg<=grid_data_2[17:12];       // VGA Display square 2
+               vga_g_reg<=grid_data_2[11:6];
+               vga_b_reg<=grid_data_2[5:0];
+		      end
 	       4'b0111:begin     
-		         vga_r_reg<=x_cnt[6:2];               //VGA Display horizontal gradient color
-                         vga_g_reg<=x_cnt[6:1];
-                         vga_b_reg<=x_cnt[6:2];
+		         vga_r_reg<=x_cnt[6:1];               //VGA Display horizontal gradient color
+               vga_g_reg<=x_cnt[6:1];
+               vga_b_reg<=x_cnt[6:1];
 		       end
 	       4'b1000:begin     
-			 vga_r_reg<=y_cnt[6:2];               //VGA Display vertical gradient color
-                         vga_g_reg<=y_cnt[6:1];
-                         vga_b_reg<=y_cnt[6:2];
+					vga_r_reg<=y_cnt[6:1];               //VGA Display vertical gradient color
+               vga_g_reg<=y_cnt[6:1];
+               vga_b_reg<=y_cnt[6:1];
 		       end
 	       4'b1001:begin     
-		         vga_r_reg<=x_cnt[6:2];               //VGA Display red horizontal gradient color
-                         vga_g_reg<=0;
-                         vga_b_reg<=0;
+		         vga_r_reg<=x_cnt[6:1];               //VGA Display red horizontal gradient color
+               vga_g_reg<=0;
+               vga_b_reg<=0;
 		       end
 	       4'b1010:begin     
 		         vga_r_reg<=0;                        //VGA Display green horizontal gradient color
-                         vga_g_reg<=x_cnt[6:1];
-                         vga_b_reg<=0;
+               vga_g_reg<=x_cnt[6:1];
+               vga_b_reg<=0;
 		       end
 	       4'b1011:begin     
 		         vga_r_reg<=0;                        //VGA Display blue horizontal gradient color
-                         vga_g_reg<=0;
-                         vga_b_reg<=x_cnt[6:2];			
+               vga_g_reg<=0;
+               vga_b_reg<=x_cnt[6:1];			
 		       end
 	       4'b1100:begin     
-		         vga_r_reg<=bar_data[15:11];          //VGA Display color bars
-                        vga_g_reg<=bar_data[10:5];
-                        vga_b_reg<=bar_data[4:0];			
-		      end
+		         vga_r_reg<=bar_data[17:12];          //VGA Display color bars
+               vga_g_reg<=bar_data[11:6];
+               vga_b_reg<=bar_data[5:0];			
+		       end
 		      default:begin
-		                vga_r_reg<=5'b11111;                 //VGA Display all white
-                                vga_g_reg<=6'b111111;
-                                vga_b_reg<=5'b11111;
+		         //vga_r_reg<=5'b11111;                 //VGA Display all white
+					vga_r_reg<=6'b111111;
+               vga_g_reg<=6'b111111;
+               //vga_b_reg<=5'b11111;
+					vga_b_reg<=6'b111111;
 			      end					  
            endcase
 	
 
   assign vga_hs = hsync_r;
   assign vga_vs = vsync_r;  
-  assign vga_r = (hsync_de & vsync_de)?vga_r_reg:5'b00000;
+  assign vga_r = (hsync_de & vsync_de)?vga_r_reg:6'b000000;
   assign vga_g = (hsync_de & vsync_de)?vga_g_reg:6'b000000;
-  assign vga_b = (hsync_de & vsync_de)?vga_b_reg:5'b00000;
+  assign vga_b = (hsync_de & vsync_de)?vga_b_reg:6'b000000;
   
  //Generate 65Mhz VGA Clock 
    pll pll_inst
