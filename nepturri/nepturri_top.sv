@@ -242,16 +242,16 @@ if(~rstn) begin
                          vga_g_reg<=0;
                          vga_b_reg<=x_cnt[6:2];			
 		       end
-	     4'b1100:begin     
-		       vga_r_reg<=bar_data[15:11];          //VGA Display color bars
-                       vga_g_reg<=bar_data[10:5];
-                       vga_b_reg<=bar_data[4:0];			
-		     end
-		     default:begin
-		               vga_r_reg<=5'b11111;                 //VGA Display all white
-                               vga_g_reg<=6'b111111;
-                               vga_b_reg<=5'b11111;
-			     end					  
+	       4'b1100:begin     
+		         vga_r_reg<=bar_data[15:11];          //VGA Display color bars
+                         vga_g_reg<=bar_data[10:5];
+                         vga_b_reg<=bar_data[4:0];			
+		       end
+		       default:begin
+		                 vga_r_reg<=5'b11111;                 //VGA Display all white
+                                 vga_g_reg<=6'b111111;
+                                 vga_b_reg<=5'b11111;
+			       end					  
            endcase
 	
 
