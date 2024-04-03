@@ -4,6 +4,7 @@
 Based on QMTECH's examples.
 
 Latest Update: Change to 18bit color (R6G6B6) thanks to Rhoderik
+
 v1.1
 It circles automatically through the various VGA test screens.
 
